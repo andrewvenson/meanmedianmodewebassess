@@ -34,6 +34,9 @@ module.exports = {
          }
      }
 
+     console.log(endpoint);
+     console.log(type);
+
      // using axios, hopefully this is okay
      const response = await axios.get(endpoint);
 

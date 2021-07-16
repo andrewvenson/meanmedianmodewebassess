@@ -31,7 +31,17 @@ app.get("/", async (req, res) => {
 app.get("/location", async (req, res) => {
     // awaiting data from dataset input function due to this being an asynchronous func
     // by default grabs Lafayette temps
-    const data = await dataSet();
+    let data;
+    let type = req.query.type;
+    let val = req.query.val;
+
+    if(typeof type !== 'undefined' && typeof val !== 'undefined'){
+        // pass dynamic data to dataset
+        console.log(val);
+        data = await dataSet(type, val);
+    }else{
+        data = await dataSet();
+    }
 
     //initially sort dataset to prevent further sorting operations within helper funcs
     const input = await data.sort((a,b) => a-b);
