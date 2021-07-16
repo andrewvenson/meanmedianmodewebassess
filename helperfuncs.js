@@ -2,7 +2,7 @@
 module.exports = {
     mean: (data) => {
         const mean = data.reduce((a,b) => a+b,0) / data.length;
-        return mean;
+        return mean.toFixed(2);
     },
     median: (data) => {
         const median = data[Math.floor(data.length / 2)];
