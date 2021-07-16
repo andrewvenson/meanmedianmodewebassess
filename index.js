@@ -27,4 +27,23 @@ app.get("/", async (req, res) => {
     res.json(dataObj);
 });
 
+// route for changing data
+app.get("/location", async (req, res) => {
+    // awaiting data from dataset input function due to this being an asynchronous func
+    // by default grabs Lafayette temps
+    const data = await dataSet();
+
+    //initially sort dataset to prevent further sorting operations within helper funcs
+    const input = await data.sort((a,b) => a-b);
+
+    let dataObj = {
+        mean: mean(input),
+        median: median(input),
+        mode: mode(input)
+    };
+
+    // return json object Part #3A
+    res.json(dataObj);
+});
+
 app.listen(port, () => console.log(`Server started on port ${port}!`));
