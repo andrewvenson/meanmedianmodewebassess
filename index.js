@@ -3,8 +3,10 @@ const app = express();
 const cors = require("cors");
 const port = process.env.PORT || 5000;
 
-const {dataSet} = require("./input.js");
+const {dataSet, locationInfo} = require("./input.js");
 const {mean, median, mode} = require("./helperfuncs.js");
+
+require("dotenv").config();
 
 //enables cross origin on all requests - if in production would set cors options to specify ip/host that would be allowed to make requests to current server
 app.use(cors());
@@ -29,15 +31,16 @@ app.get("/", async (req, res) => {
 
 // route for changing data
 app.get("/location", async (req, res) => {
-    // awaiting data from dataset input function due to this being an asynchronous func
     // by default grabs Lafayette temps
     let data;
-    let type = req.query.type;
-    let val = req.query.val;
+    const type = req.query.type;
+    const val = req.query.val;
 
+    const {name, country, coord: {lat, lon}} = await locationInfo(type,val);
+
+    // awaiting data from dataset input function due to this being an asynchronous func
     if(typeof type !== 'undefined' && typeof val !== 'undefined'){
         // pass dynamic data to dataset
-        console.log(val);
         data = await dataSet(type, val);
     }else{
         data = await dataSet();
@@ -49,7 +52,10 @@ app.get("/location", async (req, res) => {
     let dataObj = {
         mean: mean(input),
         median: median(input),
-        mode: mode(input)
+        mode: mode(input),
+        city: name,
+        coord: `${lat}, ${lon}`,
+        country: country
     };
 
     // return json object Part #3A
