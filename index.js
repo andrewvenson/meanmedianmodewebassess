@@ -16,17 +16,21 @@ app.get("/", async (req, res) => {
     // by default grabs Lafayette temps
     const data = await dataSet();
 
-    //initially sort dataset to prevent further sorting operations within helper funcs
-    const input = await data.sort((a,b) => a-b);
+    if(data === "error"){
+        res.json(data);
+    }else{
+        //initially sort dataset to prevent further sorting operations within helper funcs
+        const input = await data.sort((a,b) => a-b);
 
-    let dataObj = {
-        mean: mean(input),
-        median: median(input),
-        mode: mode(input)
-    };
+        let dataObj = {
+            mean: mean(input),
+            median: median(input),
+            mode: mode(input)
+        };
 
-    // return json object Part #3A
-    res.json(dataObj);
+        // return json object Part #3A
+        res.json(dataObj);
+    }
 });
 
 // route for changing data
