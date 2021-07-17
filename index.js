@@ -57,7 +57,7 @@ app.get("/location", async (req, res) => {
             median: median(input),
             mode: mode(input),
             city: locData.name,
-            coord: `${locData.lat}, ${locData.lon}`,
+            coord: `${locData.coord.lat}, ${locData.coord.lon}`,
             country: locData.country
         };
 
