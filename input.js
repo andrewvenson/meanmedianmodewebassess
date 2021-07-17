@@ -33,19 +33,35 @@ const getResponse = async (type, val) => {
      }
 
      // using axios, hopefully this is okay
-     const response = await axios.get(endpoint);
-     return response;
+     // added this after assessment was sent - error handling ... neccessity!
+     let responseObj = {
+         response: null,
+         error: null,
+     }
+
+     try{
+         responseObj.response = await axios.get(endpoint);
+     }catch (error){
+         responseObj.error = "error";
+     }
+
+     return responseObj;
 }
 
 // exported module in obj format for scalability
 module.exports = {
  dataSet: async (type, val) => {
-     const response = await getResponse(type, val);
+     const {response, error} = await getResponse(type, val);
+     if(error !== null){
+         return error;
+     }
      return response.data.list.map(item => item.main.temp);
  },
  locationInfo: async (type,val) => {
-     const response = await getResponse(type, val);
-     console.log(response.data.city);
+     const {response, error} = await getResponse(type, val);
+     if(error !== null){
+         return error;
+     }
      return response.data.city;
  }
 }
